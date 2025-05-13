@@ -315,6 +315,7 @@ public class RegistrationPhoneUserCreation implements FormActionFactory, FormAct
     // UserModel user = context.getSession().users().addUser(context.getRealm(),
     // username);
     user.setEnabled(true);
+    user.setUsername(user.getId());
     context.setUser(user);
 
     context.getAuthenticationSession().setClientNote(OIDCLoginProtocol.LOGIN_HINT_PARAM, username);
