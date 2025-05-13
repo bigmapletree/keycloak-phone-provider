@@ -15,6 +15,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.keycloak</groupId>
+      <artifactId>keycloak-model-jpa</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>cc.coopersoft</groupId>
       <artifactId>keycloak-phone-provider</artifactId>
       <scope>provided</scope>

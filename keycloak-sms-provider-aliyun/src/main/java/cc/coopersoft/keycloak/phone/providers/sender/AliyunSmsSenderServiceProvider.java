@@ -49,8 +49,11 @@ public class AliyunSmsSenderServiceProvider implements MessageSenderService {
     StaticCredentialProvider provider = StaticCredentialProvider.create(Credential.builder()
         .accessKeyId(config.get("key"))
         .accessKeySecret(config.get("secret"))
-        .securityToken(config.get("token")) // use STS token
+        // .securityToken(config.get("token")) // use STS token
         .build());
+
+    logger.warn("AKID:"+config.get("key"));
+    logger.warn("AKSecret:"+config.get("secret"));
 
     // Configure the Client
     client = AsyncClient.builder()
@@ -61,10 +64,11 @@ public class AliyunSmsSenderServiceProvider implements MessageSenderService {
         .overrideConfiguration(
             ClientOverrideConfiguration.create()
                 // Endpoint 请参考 https://api.aliyun.com/product/Dysmsapi
-                .setEndpointOverride("dysmsapi.ap-southeast-1.aliyuncs.com")
+                .setEndpointOverride("dysmsapi.aliyuncs.com")
             //.setConnectTimeout(Duration.ofSeconds(30))
         )
         .build();
+        logger.warn("Aliyun SMS sender service provider initialized");
 
   }
 
@@ -74,13 +78,17 @@ public class AliyunSmsSenderServiceProvider implements MessageSenderService {
     String kindName = OptionalUtils.ofBlank(kind).orElse(type.name().toLowerCase());
     String templateId = Optional.ofNullable(config.get(realm.getName().toLowerCase() + "-" + kindName + "-template"))
         .orElse(config.get(kindName + "-template"));
+        logger.warn("Aliyun SMS sender service provider sendSmsMessage: " + kindName + " templateId: " + templateId);
+        logger.warn("Aliyun SMS sender service provider config key: " + realm.getName().toLowerCase() + "-" + kindName + "-template");
 
+        phoneNumber=phoneNumber.replaceAll("[+]86[-]", "");
+        logger.warn("phone:" + phoneNumber);
     // Parameter settings for API request
     SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
         .phoneNumbers(phoneNumber)
-        .signName(realm.getDisplayName().toLowerCase())
+        .signName("阿里云短信测试")
         .templateCode(templateId)
-        .templateParam(String.format("{\"code\":\"%s\",\"expires\":\"%s\"}",code,expires / 60))
+        .templateParam(String.format("{\"code\":\"%s\"}",code))
         // Request-level configuration rewrite, can set Http request parameters, etc.
         // .requestConfiguration(RequestConfiguration.create().setHttpHeaders(new HttpHeaders()))
         .build();
@@ -88,15 +96,25 @@ public class AliyunSmsSenderServiceProvider implements MessageSenderService {
     // Asynchronously get the return value of the API request
     CompletableFuture<SendSmsResponse> response = client.sendSms(sendSmsRequest);
     // Synchronously get the return value of the API request
-    //SendSmsResponse resp = response.get();
-    //System.out.println(new Gson().toJson(resp));
+    // try{
+
+    // SendSmsResponse resp = response.get();
+    // logger.warn(resp.toString());
+    // }catch (Exception e){
+    //     logger.warn(e.getMessage());
+
+    // }
     // Asynchronous processing of return values
-        /*response.thenAccept(resp -> {
-            System.out.println(new Gson().toJson(resp));
-        }).exceptionally(throwable -> { // Handling exceptions
-            System.out.println(throwable.getMessage());
-            return null;
-        });*/
+    response.thenAccept(resp -> {
+        // System.out.println(new Gson().toJson(resp));
+    logger.warn("Then");
+    logger.warn(resp.toString());
+    }).exceptionally(throwable -> { // Handling exceptions
+    logger.warn("Throw");
+    logger.warn(throwable.toString());
+        System.out.println(throwable.getMessage());
+        return null;
+    });
 
     // Finally, close the client
     client.close();
