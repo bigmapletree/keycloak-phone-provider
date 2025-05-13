@@ -23,9 +23,9 @@
 
     <scm>
         <tag>${project.version}</tag>
-        <connection>scm:git@github.com:cooperlyt/keycloak-phone-provider.git</connection>
-        <developerConnection>scm:git@github.com:cooperlyt/keycloak-phone-provider.git</developerConnection>
-        <url>https://github.com/cooperlyt/keycloak-phone-provider</url>
+        <connection>scm:git@github.com:bigmapletree/keycloak-phone-provider.git</connection>
+        <developerConnection>scm:git@github.com:bigmapletree/keycloak-phone-provider.git</developerConnection>
+        <url>https://github.com/bigmapletree/keycloak-phone-provider</url>
     </scm>
 
     <developers>
