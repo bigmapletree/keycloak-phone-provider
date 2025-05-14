@@ -61,7 +61,7 @@ public class AliyunSmsSenderServiceProvider implements MessageSenderService {
         .overrideConfiguration(
             ClientOverrideConfiguration.create()
                 // Endpoint 请参考 https://api.aliyun.com/product/Dysmsapi
-                .setEndpointOverride("dysmsapi.ap-southeast-1.aliyuncs.com")
+                .setEndpointOverride("dysmsapi.aliyuncs.com")
             //.setConnectTimeout(Duration.ofSeconds(30))
         )
         .build();
