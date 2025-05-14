@@ -71,6 +71,7 @@ public class AliyunSmsSenderServiceProvider implements MessageSenderService {
   @Override
   public void sendSmsMessage(TokenCodeType type, String phoneNumber, String code, int expires, String kind) throws MessageSendException {
 
+    String signName = Optional.ofNullable(config.get(realm.getName().toLowerCase() + "-" + "-sign")).orElse(config.get("sign"));
     String kindName = OptionalUtils.ofBlank(kind).orElse(type.name().toLowerCase());
     String templateId = Optional.ofNullable(config.get(realm.getName().toLowerCase() + "-" + kindName + "-template"))
         .orElse(config.get(kindName + "-template"));
@@ -79,7 +80,7 @@ public class AliyunSmsSenderServiceProvider implements MessageSenderService {
     // Parameter settings for API request
     SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
         .phoneNumbers(phoneNumber)
-        .signName(realm.getDisplayName().toLowerCase())
+        .signName(signName)
         .templateCode(templateId)
         .templateParam(String.format("{\"code\":\"%s\",\"expires\":\"%s\"}",code,expires / 60))
         // Request-level configuration rewrite, can set Http request parameters, etc.
