@@ -75,6 +75,7 @@ public class AliyunSmsSenderServiceProvider implements MessageSenderService {
     String templateId = Optional.ofNullable(config.get(realm.getName().toLowerCase() + "-" + kindName + "-template"))
         .orElse(config.get(kindName + "-template"));
 
+    phoneNumber=phoneNumber.replaceAll("[+]86[-]", "");
     // Parameter settings for API request
     SendSmsRequest sendSmsRequest = SendSmsRequest.builder()
         .phoneNumbers(phoneNumber)
