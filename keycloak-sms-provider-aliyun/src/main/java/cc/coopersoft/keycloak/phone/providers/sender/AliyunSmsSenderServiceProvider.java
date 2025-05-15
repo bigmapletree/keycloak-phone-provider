@@ -90,8 +90,13 @@ public class AliyunSmsSenderServiceProvider implements MessageSenderService {
     // Asynchronously get the return value of the API request
     CompletableFuture<SendSmsResponse> response = client.sendSms(sendSmsRequest);
     // Synchronously get the return value of the API request
-    //SendSmsResponse resp = response.get();
-    //System.out.println(new Gson().toJson(resp));
+    try{
+        SendSmsResponse resp = response.get();
+        logger.infof("send sms via aliyun response %s", resp.toMap().toString());
+    } catch(Exception err) {
+        throw new MessageSendException("failed to send sms via aliyun", err);
+    }
+
     // Asynchronous processing of return values
         /*response.thenAccept(resp -> {
             System.out.println(new Gson().toJson(resp));
